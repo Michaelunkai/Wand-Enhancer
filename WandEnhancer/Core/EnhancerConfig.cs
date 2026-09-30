@@ -160,6 +160,14 @@ namespace WandEnhancer.Core
                 return null;
             }
 
+            // WAND_ENHANCER_IDEMPOTENT_REDUCER: the pro-account wrapper may already
+            // be present (re-run over a previously patched bundle). Resolve the
+            // patch as applied instead of failing on the pristine-only pattern.
+            if (reducer.Body.IndexOf("typeof account", StringComparison.Ordinal) >= 0)
+            {
+                return Edits(new JsEdit(reducer.BodyOpen + 1, reducer.BodyOpen + 1, string.Empty));
+            }
+
             // ${account} is a regex back-reference, not a PatchPayload placeholder.
             return Edits(reducer.ReplaceInBody(
                 @"account:\s*(?<account>[\w$]+)",

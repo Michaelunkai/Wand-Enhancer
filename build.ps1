@@ -75,7 +75,7 @@ $visualStudio = Resolve-VisualStudioPath
 $msbuild = Resolve-MSBuildPath $visualStudio
 $targetFrameworkRoot = Resolve-TargetFrameworkRoot
 
-$buildArgs = @('/m', "/p:Configuration=$Configuration", '/p:Platform=Any CPU')
+$buildArgs = @('/m', "/p:Configuration=$Configuration", '/p:Platform=Any CPU', "/p:FrameworkPathOverride=$(Join-Path ${env:ProgramFiles(x86)} 'Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1')")
 if ($targetFrameworkRoot) {
     $buildArgs += "/p:TargetFrameworkRootPath=$targetFrameworkRoot"
 }
