@@ -2,11 +2,17 @@
 
 ![logo](./assets/icon.svg)
 
+![fork hero](./assets/fork/hero.svg)
+
 # WandEnhancer
 
 [![GitLab Mirror](https://img.shields.io/badge/GitLab-mirror-fc6d26?logo=gitlab)](https://gitlab.com/kitbyte/wand-enhancer)
 
 </div>
+
+> **About this fork ([Michaelunkai/Wand-Enhancer](https://github.com/Michaelunkai/Wand-Enhancer)):** tracks upstream [`k1tbyte/Wand-Enhancer`](https://github.com/k1tbyte/Wand-Enhancer) at release `2.1.0.0` (`c6ae7a3`) plus a local reliability fix: `LocateAccountReducer` is now **idempotent** — re-running the enhancer over a previously patched bundle resolves `setAccountReducer` as applied instead of aborting with `Pattern 'account:\s*(?<account>[\w$]+)' not found inside p()`. The local build script additionally pins `FrameworkPathOverride` for machines with unregistered 4.8.1 targeting packs, and refuses to deploy any build whose binary lacks the compiled reducer guard.
+>
+> ![enhance pipeline](./assets/fork/pipeline.svg)
 
 <h4>An open-source interoperability tool designed to extend local client-side configurations and improve the UX of the Wand application.</h4>
 
@@ -50,6 +56,14 @@ This repository does not publish official compiled binaries. Build your own exec
 5. Click **Run workflow** and start the run. Leave **Include GitHub release checks when Wand starts** off for a fully offline patcher, or enable it to compile in new-version notifications.
 6. Wait for the workflow to finish, open the completed run, and download the artifact.
 7. Extract the artifact zip and run `WandEnhancer.exe` to apply local client modifications.
+
+### One-command update, build, enhance & run (this fork)
+
+[`scripts/update-and-enhance.ps1`](./scripts/update-and-enhance.ps1) does the whole loop unattended: it asks GitHub for the newest release, fast-forwards this checkout (never destroying local commits), verifies the reducer-idempotency guard is present, builds the web panel + solution, refuses to deploy any binary lacking the compiled guard, writes the full auto-patch config (Pro + no-updates + F12 + remote panel, static fuse strategy, re-apply after client updates), deploys the launcher over the Wand stub, and starts Wand enhanced. Overrides via environment: `WAND_ENHANCER_REPO`, `WAND_ENHANCER_INSTALL_DIR`, `WAND_ENHANCER_UPSTREAM_OWNER`, `WAND_ENHANCER_UPSTREAM_REPO`.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\update-and-enhance.ps1
+```
 
 ### Testing a release candidate
 
